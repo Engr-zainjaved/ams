@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import authConfig from "@/auth.config";
 import { getUserById } from "@/data/user";
 import { UserRole } from "@prisma/client";
+import { getTwoFactorConfrimationByUserId } from "@/data/two-factor-confirmation";
 
 declare module "next-auth" {
   interface Session {
@@ -35,7 +36,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // prevent signIn without email verification
       if (!existingUser?.emailVerified) return false;
 
-      // TODO: Add 2FA check
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfrimationByUserId(existingUser.id);
+        console.log("TCL: signIn -> twoFactorConfirmation", twoFactorConfirmation);
+
+        if (!twoFactorConfirmation) return false;
+
+        // Delete two factor confirmation for next sign in
+        await db.twoFactorConfirmation.delete({
+          where: { id: twoFactorConfirmation.id },
+        });
+      }
 
       return true;
     },
