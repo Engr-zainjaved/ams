@@ -10,11 +10,11 @@ const Navbar = () => {
   return (
     <div className="bg-secondary flex justify-between items-center p-4 rounded-xl w-3/5">
       <div className="flex gap-x-2">
-        <Button asChild variant={pathName === "/server" ? "default" : "outline"}>
-          <Link href="/server">Server</Link>
+        <Button asChild variant={pathName === "/your-flights" ? "default" : "outline"}>
+          <Link href="/your-flights">Your Flights</Link>
         </Button>
-        <Button asChild variant={pathName === "/client" ? "default" : "outline"}>
-          <Link href="/client">Client</Link>
+        <Button asChild variant={pathName === "/flights" ? "default" : "outline"}>
+          <Link href="/flights">Flights</Link>
         </Button>
 
         <Button asChild variant={pathName === "/settings" ? "default" : "outline"}>

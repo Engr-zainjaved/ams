@@ -4,7 +4,7 @@ const Page = async () => {
   const session = await auth();
   return (
     <div className="bg-black text-white p-10 rounded-xl">
-      <p>Settings Page</p>
+      <p>Admin Page</p>
     </div>
   );
 };
