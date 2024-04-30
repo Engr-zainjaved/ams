@@ -1,17 +1,11 @@
 import { ExtendedUser } from "@/next-auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
-interface UserInfoProps {
-  user?: ExtendedUser;
-  label: string;
-}
-
-const Page = ({ user, label }: UserInfoProps) => {
+const Page = () => {
   return (
     <Card className="w-3/5 shadow-md">
       <CardHeader>
-        <p className="text-2xl font-semibold text-center">{label}</p>
+        <p className="text-2xl font-semibold text-center">{"Flights"}</p>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
