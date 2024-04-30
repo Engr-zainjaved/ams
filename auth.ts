@@ -43,7 +43,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfrimationByUserId(existingUser.id);
-        console.log("TCL: signIn -> twoFactorConfirmation", twoFactorConfirmation);
 
         if (!twoFactorConfirmation) return false;
 
@@ -64,7 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       const existingAccount = await getAccountByUserId(existingUser.id);
 
-      token.isOauth = !!existingAccount;
+      token.isOAuth = !!existingAccount;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       token.name = existingUser.name;

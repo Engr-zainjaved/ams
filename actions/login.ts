@@ -40,7 +40,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
-        return { error: "Code not found" };
+        return { error: "Invalid code!" };
       }
 
       if (twoFactorToken.token !== code) {
@@ -71,11 +71,11 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
         },
       });
     } else {
-    }
-    const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-    await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
+      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+      await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
 
-    return { twoFactor: true };
+      return { twoFactor: true };
+    }
   }
 
   try {
