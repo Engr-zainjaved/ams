@@ -17,7 +17,7 @@ export default async function Home() {
         </h1>
         <p className="text-white text-lg drop-shadow-md">A simple database project</p>
         <div>
-          <LoginButton>
+          <LoginButton mode="modal" asChild>
             <Button variant="secondary" size="lg">
               SignIn
             </Button>
