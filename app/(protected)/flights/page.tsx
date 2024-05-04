@@ -1,21 +1,37 @@
-import { ExtendedUser } from "@/next-auth";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Payment, columns } from "./columns";
+import { DataTable } from "./data-table";
 
-const Page = () => {
+async function getData(): Promise<Payment[]> {
+  // Fetch data from your API here.
+  return [
+    {
+      flightId: "728ed52f",
+      from: "Karachi",
+      to: "Lahore",
+      amount: 100,
+      class: "economy",
+    },
+    {
+      flightId: "728ed52f",
+      from: "Karachi",
+      to: "Lahore",
+      amount: 100,
+      class: "economy",
+    },
+    // ...
+  ];
+}
+
+const Page = async () => {
+  const data = await getData();
   return (
-    <Card className="w-3/5 shadow-md">
+    <Card className="w-4/5 shadow-md">
       <CardHeader>
-        <p className="text-2xl font-semibold text-center">{"Flights"}</p>
+        <p className="text-2xl font-semibold text-center">Book a flight</p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-          <p className="text-sm font-medium">Flight Id</p>
-          <p className="truncate text-xs max-w-48 font-mono p-1 bg-slate-100 rounded-md">1d2457</p>
-        </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-          <p className="text-sm font-medium">Flight Id</p>
-          <p className="truncate text-xs max-w-48 font-mono p-1 bg-slate-100 rounded-md">454878</p>
-        </div>
+        <DataTable columns={columns} data={data} />
       </CardContent>
     </Card>
   );

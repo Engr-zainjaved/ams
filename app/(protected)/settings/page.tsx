@@ -73,7 +73,7 @@ const Page = () => {
   console.log("user.isOAuth", user?.isOAuth);
 
   return (
-    <Card className="w-3/5">
+    <Card className="w-4/5">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">⚙ Settings</p>
         <p className="text-2xl font-semibold text-center">{user?.isOAuth}</p>

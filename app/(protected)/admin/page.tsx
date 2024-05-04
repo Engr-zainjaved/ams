@@ -31,7 +31,7 @@ const Page = () => {
     });
   };
   return (
-    <Card className="w-3/5">
+    <Card className="w-4/5">
       <CardHeader className="text-2xl font-semibold text-center">
         <p>Admin</p>
       </CardHeader>

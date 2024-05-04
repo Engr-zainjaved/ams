@@ -32,6 +32,8 @@ model User {
   accounts              Account[]
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfrimation TwoFactorConfirmation?
+  Booking               Booking[]
+  FlightModification    FlightModification[]
 
   @@map("users")
 }
@@ -90,4 +92,67 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
+}
+
+model Flight {
+  id            String       @id @default(cuid())
+  departure     DateTime
+  arrival       DateTime
+  origin        String
+  destination   String
+  economyPrice  Float
+  businessPrice Float
+  status        FlightStatus @default(AVAILABLE)
+
+  bookings           Booking[]
+  FlightModification FlightModification[]
+
+  @@map("flights")
+}
+
+enum FlightStatus {
+  AVAILABLE
+  CANCELLED
+  DELAYED
+}
+
+model Booking {
+  id       String        @id @default(cuid())
+  userId   String
+  flightId String
+  class    FlightClass
+  status   BookingStatus @default(CONFIRMED)
+
+  flight Flight @relation(fields: [flightId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+enum FlightClass {
+  ECONOMY
+  BUSINESS
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  UPGRADED
+  DOWNGRADED
+}
+
+// Admin functionality extensions
+model FlightModification {
+  id         String   @id @default(cuid())
+  flightId   String
+  changedBy  String // Admin User ID
+  changeType String
+  oldValue   String
+  newValue   String
+  modifiedAt DateTime @default(now())
+
+  flight Flight @relation(fields: [flightId], references: [id])
+  admin  User   @relation(fields: [changedBy], references: [id])
+
+  @@map("flight_modifications")
 }
