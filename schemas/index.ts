@@ -1,5 +1,5 @@
 import { newPassword } from "@/actions/new-password";
-import { UserRole } from "@prisma/client";
+import { UserRole, FlightStatus } from "@prisma/client";
 import * as z from "zod";
 
 export const SettingsSchema = z
@@ -72,4 +72,32 @@ export const RegisterSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required",
   }),
+});
+
+export const CreateFlightSchema = z.object({
+  userId: z.string(),
+  departure: z.date(),
+  arrival: z.date(),
+  origin: z.string(),
+  destination: z.string(),
+  economyPrice: z.number(),
+  businessPrice: z.number(),
+  status: z.nativeEnum(FlightStatus).optional(),
+});
+
+export const EditFlightSchema = z.object({
+  userId: z.string(),
+  flightId: z.string(),
+  departure: z.date().optional(),
+  arrival: z.date().optional(),
+  origin: z.string().optional(),
+  destination: z.string().optional(),
+  economyPrice: z.number().optional(),
+  businessPrice: z.number().optional(),
+  status: z.nativeEnum(FlightStatus).optional(),
+});
+
+export const DeleteFlightSchema = z.object({
+  userId: z.string(),
+  flightId: z.string(),
 });
