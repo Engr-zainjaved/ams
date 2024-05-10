@@ -10,7 +10,6 @@ import { toUTCDate } from "@/lib/utils";
 export const createFlight = async (values: z.infer<typeof CreateFlightSchema>) => {
   const role = await currentRole();
   const validateFields = CreateFlightSchema.safeParse(values);
-  console.log("TCL: createFlight -> validateFields", validateFields);
 
   if (!validateFields.success) {
     return { error: "Invalid fields!" };

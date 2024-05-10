@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,28 +12,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
+import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +24,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -53,78 +41,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
-const data: Flights[] = [
-  {
-    id: "P001",
-    departure: new Date("2024-05-10T09:00:00"),
-    arrival: new Date("2024-05-10T11:00:00"),
-    origin: "New York",
-    destination: "Washington D.C.",
-    economyPrice: 120.0,
-    businessPrice: 250.0,
-    status: "available",
-  },
-  {
-    id: "P002",
-    departure: new Date("2024-06-15T15:00:00"),
-    arrival: new Date("2024-06-15T18:30:00"),
-    origin: "San Francisco",
-    destination: "Los Angeles",
-    economyPrice: 80.0,
-    businessPrice: 180.0,
-    status: "delayed",
-  },
-  {
-    id: "P003",
-    departure: new Date("2024-07-20T07:00:00"),
-    arrival: new Date("2024-07-20T09:00:00"),
-    origin: "Chicago",
-    destination: "Minneapolis",
-    economyPrice: 90.0,
-    businessPrice: 210.0,
-    status: "cancelled",
-  },
-  {
-    id: "P004",
-    departure: new Date("2024-08-01T22:00:00"),
-    arrival: new Date("2024-08-02T02:00:00"),
-    origin: "Miami",
-    destination: "New York",
-    economyPrice: 130.0,
-    businessPrice: 260.0,
-    status: "available",
-  },
-  {
-    id: "P005",
-    departure: new Date("2024-09-12T10:00:00"),
-    arrival: new Date("2024-09-12T12:00:00"),
-    origin: "Seattle",
-    destination: "Portland",
-    economyPrice: 70.0,
-    businessPrice: 150.0,
-    status: "available",
-  },
-];
-
-export type Flights = {
-  id: string;
-  departure: Date;
-  arrival: Date;
-  origin: string;
-  destination: string;
-  economyPrice: number;
-  businessPrice: number;
-  status: "available" | "cancelled" | "delayed";
-};
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Flights } from "@/interfaces/interfaces";
 
 export const columns: ColumnDef<Flights>[] = [
   {
@@ -252,7 +176,10 @@ export const columns: ColumnDef<Flights>[] = [
   },
 ];
 
-export function DataTable() {
+interface DataTableProps {
+  data: Flights[];
+}
+export function DataTable({ data }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
