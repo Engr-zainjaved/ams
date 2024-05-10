@@ -15,7 +15,6 @@ export async function bookFlight({ userId, flightId, flightClass }: bookFlightPr
   }
 
   try {
-    // Check if the flight is available
     const flight = await db.flight.findUnique({
       where: { id: flightId },
       include: { bookings: true },
@@ -25,17 +24,16 @@ export async function bookFlight({ userId, flightId, flightClass }: bookFlightPr
       throw new Error("Flight not available");
     }
 
-    // Create a new booking
     const newBooking = await db.booking.create({
       data: {
         userId,
         flightId,
         class: flightClass,
-        status: "CONFIRMED", // default status
+        status: "CONFIRMED",
       },
     });
 
-    return newBooking;
+    return { success: "Flight booked successfully!", newBooking };
   } catch (error) {
     console.error("Booking Error:", error);
     throw new Error("Error booking the flight");

@@ -61,7 +61,6 @@ const Page = () => {
           }
         })
         .catch((error) => {
-          console.log("TCL: onSubmit -> error", error);
           setError("Something went wrong!");
         });
     });

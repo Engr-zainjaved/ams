@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getFlights } from "@/actions/get-flights";
 import { Flights } from "@/interfaces/interfaces";
+import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 
 const data: Payment[] = [
   {
@@ -145,6 +147,10 @@ export const columns: ColumnDef<Payment>[] = [
 export default async function MainDataTable() {
   const response = await getFlights();
   const data: Flights[] = response.flights;
+  let userSessionId: string;
+
+  const session = await auth();
+  userSessionId = session?.user.id as string;
 
   return (
     <>
@@ -153,7 +159,7 @@ export default async function MainDataTable() {
           <p className="text-2xl font-semibold text-center">Book your flights</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <DataTable data={data} />
+          <DataTable data={data} userSessionId={userSessionId} />
         </CardContent>
       </Card>
     </>

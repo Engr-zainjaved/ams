@@ -40,8 +40,6 @@ export const RegisterForm = () => {
 
     startTransition(() => {
       register(values).then((data) => {
-        console.log("TCL: onSubmit -> ", data);
-        console.log("TCL: onSubmit -> ", data.error);
         setError(data.error);
         setSuccess(data.success);
       });

@@ -49,143 +49,175 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Flights } from "@/interfaces/interfaces";
-
-export const columns: ColumnDef<Flights>[] = [
-  {
-    accessorKey: "id",
-    header: ({ column }) => {
-      return (
-        <div
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center cursor-pointer hover:underline"
-        >
-          Flight Id
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      );
-    },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
-  },
-  {
-    accessorKey: "origin",
-    header: ({ column }) => {
-      return (
-        <div
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center cursor-pointer hover:underline"
-        >
-          Origin
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      );
-    },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("origin")}</div>,
-  },
-  {
-    accessorKey: "destination",
-    header: ({ column }) => {
-      return (
-        <div
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center cursor-pointer hover:underline"
-        >
-          Destination
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      );
-    },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("destination")}</div>,
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }) => {
-      return (
-        <div
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center cursor-pointer hover:underline"
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </div>
-      );
-    },
-    cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const flightDetails = row.original;
-      const { id, arrival, origin, departure, destination, status, economyPrice, businessPrice } =
-        flightDetails;
-
-      return (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Book</Button>
-          </DialogTrigger>
-
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Flight Details</DialogTitle>
-            </DialogHeader>
-            <DialogDescription>
-              <div className="space-y-3">
-                <div className="space-y-1">
-                  <p>
-                    <strong>ID:</strong> {id}
-                  </p>
-                  <p>
-                    <strong>Departure:</strong> {departure.toLocaleString()}
-                  </p>
-                  <p>
-                    <strong>Arrival:</strong> {arrival.toLocaleString()}
-                  </p>
-                  <p>
-                    <strong>Origin:</strong> {origin}
-                  </p>
-                  <p>
-                    <strong>Destination:</strong> {destination}
-                  </p>
-                  <p>
-                    <strong>Status:</strong> {status}
-                  </p>
-                </div>
-
-                <div className="flex flex-col justify-between space-y-4">
-                  <Select>
-                    <SelectTrigger className="w-auto">
-                      <SelectValue placeholder="Select a class" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Available tickets</SelectLabel>
-                        <SelectItem value="economyPrice">Economy: ${economyPrice}</SelectItem>
-                        <SelectItem value="businessPrice">Business: ${businessPrice}</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <Button onClick={() => console.log("Booking", id)}>Book Selected Class</Button>
-                </div>
-              </div>
-            </DialogDescription>
-          </DialogContent>
-        </Dialog>
-      );
-    },
-  },
-];
+import { bookFlight } from "@/actions/book-flight";
+import { FlightClass } from "@prisma/client";
+import { toast } from "sonner";
 
 interface DataTableProps {
   data: Flights[];
+  userSessionId: string;
 }
-export function DataTable({ data }: DataTableProps) {
+export function DataTable({ data, userSessionId }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [selectedFlight, setSelectedFlight] = React.useState<Flights | null>(null);
+  const [selectedClass, setSelectedClass] = React.useState<FlightClass>("ECONOMY");
   const [isDialogOpen, setDialogOpen] = React.useState(false);
+
+  const columns: ColumnDef<Flights>[] = [
+    {
+      accessorKey: "id",
+      header: ({ column }) => {
+        return (
+          <div
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="flex items-center cursor-pointer hover:underline"
+          >
+            Flight Id
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        );
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+    },
+    {
+      accessorKey: "origin",
+      header: ({ column }) => {
+        return (
+          <div
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="flex items-center cursor-pointer hover:underline"
+          >
+            Origin
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        );
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("origin")}</div>,
+    },
+    {
+      accessorKey: "destination",
+      header: ({ column }) => {
+        return (
+          <div
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="flex items-center cursor-pointer hover:underline"
+          >
+            Destination
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        );
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("destination")}</div>,
+    },
+    {
+      accessorKey: "status",
+      header: ({ column }) => {
+        return (
+          <div
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="flex items-center cursor-pointer hover:underline"
+          >
+            Status
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        );
+      },
+      cell: ({ row }) => <div className="capitalize">{row.getValue("status")}</div>,
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const flightDetails = row.original;
+        const { id, arrival, origin, departure, destination, status, economyPrice, businessPrice } =
+          flightDetails;
+
+        return (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Book</Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Flight Details</DialogTitle>
+              </DialogHeader>
+              <DialogDescription>
+                <div className="space-y-3">
+                  <div className="space-y-1">
+                    <p>
+                      <strong>ID:</strong> {id}
+                    </p>
+                    <p>
+                      <strong>Departure:</strong> {departure.toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>Arrival:</strong> {arrival.toLocaleString()}
+                    </p>
+                    <p>
+                      <strong>Origin:</strong> {origin}
+                    </p>
+                    <p>
+                      <strong>Destination:</strong> {destination}
+                    </p>
+                    <p>
+                      <strong>Status:</strong> {status}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col justify-between space-y-4">
+                    <Select
+                      onValueChange={(selectedOption) =>
+                        selectedOption === "economyPrice"
+                          ? setSelectedClass("ECONOMY")
+                          : setSelectedClass("BUSINESS")
+                      }
+                    >
+                      <SelectTrigger className="w-auto">
+                        <SelectValue placeholder="Select a class" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Available tickets</SelectLabel>
+                          <SelectItem value="economyPrice">Economy: ${economyPrice}</SelectItem>
+                          <SelectItem value="businessPrice">Business: ${businessPrice}</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      onClick={async () => {
+                        try {
+                          const bookingFlight = await bookFlight({
+                            userId: userSessionId,
+                            flightId: id,
+                            flightClass: selectedClass,
+                          });
+                          if (bookingFlight.success) {
+                            toast("Booking successful!");
+                            setDialogOpen(false);
+                          } else {
+                            toast("Booking failed. Please try again.");
+                          }
+                        } catch (error) {
+                          console.error(error);
+                          toast("An error occurred. Please try again.");
+                        }
+                      }}
+                    >
+                      Book Selected Class
+                    </Button>
+                  </div>
+                </div>
+              </DialogDescription>
+            </DialogContent>
+          </Dialog>
+        );
+      },
+    },
+  ];
 
   const openDialog = (flight: Flights) => {
     setSelectedFlight(flight);
