@@ -74,16 +74,40 @@ export const RegisterSchema = z.object({
   }),
 });
 
-export const CreateFlightSchema = z.object({
-  userId: z.string(),
-  departure: z.date(),
-  arrival: z.date(),
-  origin: z.string(),
-  destination: z.string(),
-  economyPrice: z.number(),
-  businessPrice: z.number(),
-  status: z.nativeEnum(FlightStatus).optional(),
-});
+export const CreateFlightSchema = z
+  .object({
+    origin: z.string().min(1, "Origin is required."),
+    destination: z.string().min(1, "Destination is required."),
+    departure: z
+      .string()
+      .min(1, "Departure date and time are required.")
+      .refine(
+        (value) => {
+          const departureDate = new Date(value);
+          const now = new Date();
+          return departureDate >= now;
+        },
+        {
+          message: "Departure date and time must be in the future.",
+        }
+      ),
+    arrival: z.string().min(1, "Arrival date and time are required."),
+    economyPrice: z
+      .number()
+      .refine((value) => value >= 0, { message: "Economy price must be a non-negative number." }),
+    businessPrice: z
+      .number()
+      .refine((value) => value >= 0, { message: "Business price must be a non-negative number." }),
+    status: z.nativeEnum(FlightStatus),
+  })
+  .refine(
+    (data) => {
+      const departureDate = new Date(data.departure);
+      const arrivalDate = new Date(data.arrival);
+      return arrivalDate.getTime() > departureDate.getTime();
+    },
+    { message: "Departure date and time must be earlier than the arrival date and time." }
+  );
 
 export const EditFlightSchema = z.object({
   userId: z.string(),

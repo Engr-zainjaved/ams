@@ -70,8 +70,6 @@ const Page = () => {
     });
   };
 
-  console.log("user.isOAuth", user?.isOAuth);
-
   return (
     <Card className="w-4/5">
       <CardHeader>
