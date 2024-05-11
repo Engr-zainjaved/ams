@@ -31,9 +31,6 @@ const Navbar = () => {
         <Button asChild variant={pathName === "/admin" ? "default" : "outline"}>
           <Link href="/admin">Admin</Link>
         </Button>
-        <Button asChild variant={pathName === "/flights-beta" ? "default" : "outline"}>
-          <Link href="/flights-beta">Flights(Beta)</Link>
-        </Button>
       </div>
       <div className="md:hidden">
         <DropdownMenu>

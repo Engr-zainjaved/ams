@@ -1,40 +1,67 @@
+import { getFlights } from "@/actions/get-flights";
+import { auth } from "@/auth";
+import { DataTable } from "@/components/data-table";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Payment, columns } from "./columns";
-import { DataTable } from "./data-table";
+import { Flights } from "@/interfaces/interfaces";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      flightId: "728ed52f",
-      from: "Karachi",
-      to: "Lahore",
-      amount: 100,
-      class: "economy",
-    },
-    {
-      flightId: "728ed52f",
-      from: "Karachi",
-      to: "Lahore",
-      amount: 100,
-      class: "economy",
-    },
-    // ...
-  ];
-}
+const data: Payment[] = [
+  {
+    id: "m5gr84i9",
+    amount: 316,
+    status: "success",
+    email: "ken99@yahoo.com",
+  },
+  {
+    id: "3u1reuv4",
+    amount: 242,
+    status: "success",
+    email: "Abe45@gmail.com",
+  },
+  {
+    id: "derv1ws0",
+    amount: 837,
+    status: "processing",
+    email: "Monserrat44@gmail.com",
+  },
+  {
+    id: "5kma53ae",
+    amount: 874,
+    status: "success",
+    email: "Silas22@gmail.com",
+  },
+  {
+    id: "bhqecj4p",
+    amount: 721,
+    status: "failed",
+    email: "carmella@hotmail.com",
+  },
+];
 
-const Page = async () => {
-  const data = await getData();
-  return (
-    <Card className="w-4/5 shadow-md">
-      <CardHeader>
-        <p className="text-2xl font-semibold text-center">Book a flight</p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <DataTable columns={columns} data={data} />
-      </CardContent>
-    </Card>
-  );
+export type Payment = {
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
 };
 
-export default Page;
+export default async function MainDataTable() {
+  const response = await getFlights();
+  const data: Flights[] = response.flights;
+  let userSessionId: string;
+
+  const session = await auth();
+  userSessionId = session?.user.id as string;
+
+  return (
+    <>
+      <Card className="w-4/5 shadow-md">
+        <CardHeader>
+          <p className="text-2xl font-semibold text-center">Book your flights</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <DataTable data={data} userSessionId={userSessionId} />
+        </CardContent>
+      </Card>
+    </>
+  );
+}

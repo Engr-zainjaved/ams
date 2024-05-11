@@ -13,10 +13,10 @@ const PanelLink = ({ href, title, description }: PanelLinkProps) => {
   return (
     <Link href={href} passHref>
       <Card className="w-full max-w-md p-4 hover:cursor-pointer hover:bg-slate-50 h-full flex flex-col justify-between">
-        <CardHeader className="text-2xl font-semibold text-center">
+        <CardHeader className="text-xl font-semibold text-center">
           <p>{title}</p>
         </CardHeader>
-        <CardContent className="text-center">{description}</CardContent>
+        <CardContent className="text-center text-sm">{description}</CardContent>
       </Card>
     </Link>
   );
