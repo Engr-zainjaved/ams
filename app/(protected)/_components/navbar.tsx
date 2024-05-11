@@ -28,8 +28,8 @@ const Navbar = () => {
         <Button asChild variant={pathName === "/settings" ? "default" : "outline"}>
           <Link href="/settings">Settings</Link>
         </Button>
-        <Button asChild variant={pathName === "/admin" ? "default" : "outline"}>
-          <Link href="/admin">Admin</Link>
+        <Button asChild variant={pathName === "/admin/create-flight" ? "default" : "outline"}>
+          <Link href="/admin/create-flight">Admin</Link>
         </Button>
       </div>
       <div className="md:hidden">

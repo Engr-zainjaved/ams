@@ -6,9 +6,15 @@ const Page = async () => {
   const user = await currentUser();
   const bookedFlights = await getBookedFlights(user?.email as string);
   const bookings = bookedFlights.bookedFlights;
-  console.log("TCL: Page -> bookings", bookings);
 
-  return <UserInfo user={user} label="Booked Flights" bookings={bookings} />;
+  return (
+    <UserInfo
+      user={user}
+      label="Booked Flights"
+      bookings={bookings}
+      bookedFlights={bookedFlights}
+    />
+  );
 };
 
 export default Page;
