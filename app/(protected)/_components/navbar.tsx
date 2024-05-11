@@ -16,7 +16,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 const Navbar = () => {
   const pathName = usePathname();
   return (
-    <div className="bg-secondary flex justify-between items-center p-4 rounded-xl w-4/5 ">
+    <div className="mt-3 bg-secondary flex justify-between items-center p-4 rounded-xl w-4/5 ">
       <div className=" md:flex md:gap-x-2 hidden ">
         <Button asChild variant={pathName === "/your-flights" ? "default" : "outline"}>
           <Link href="/your-flights">Your Flights</Link>
